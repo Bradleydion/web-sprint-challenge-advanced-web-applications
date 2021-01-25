@@ -1,18 +1,23 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from 'axios'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
-const Login = () => {
-  const state = {
-    credentials: {
-      username: '',
-      password: '',
-    }
-  };
+import {useHistory} from 'react-router-dom'
 
-  const handleChange = e => {
-    this.setState({
+const initialValues= {
+  credentials: {
+    username: '',
+    password: '',
+  }
+};
+
+const Login = () => {
+ const [state, setState]=useState(initialValues)
+ const history = useHistory()
+
+  const handleChange = (e) => {
+    setState({
       credentials: {
-        ...this.state.credentials,
+        ...state.credentials,
         [e.target.name]: e.target.value
       }
     });
@@ -20,11 +25,10 @@ const Login = () => {
 
   const login = e => {
     e.preventDefault();
-    axios.post("http://localhost:5000/api/login", this.state.credentials)
+    axios.post("http://localhost:5000/api/login", state.credentials)
     .then(res => {
-      console.log(res)
       localStorage.setItem("token", res.data.payload);
-      this.props.history.push("/protected");
+      history.push("/BubblePage");
     })
     .catch(err => console.log(err))
   }
